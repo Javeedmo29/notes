@@ -1,0 +1,28 @@
+apiVersion: extensions/v1beta1 # for versions before 1.7.0 use apps/v1beta1
+kind: Deployment
+metadata:
+  name: jenkins
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jenkins
+  template:
+    metadata:
+      labels:
+        app: jenkins
+    spec:
+      containers:
+      - name: jenkins
+        image: arkakundu1407/docker-pipeline:jenkins_modified
+        securityContext:
+          privileged: true
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - mountPath: /var/run/docker.sock
+          name: docker-sock-volume
+      volumes:
+        - name: docker-sock-volume
+          hostPath:
+            path: /var/run/docker.sock
